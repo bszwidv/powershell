@@ -1,0 +1,15 @@
+get-wmiobject win32_product | export-csv "SoftwareInventar.csv" -notypeinformation
+
+"LAPMIN"| foreach { get-wmiobject win32_product -computername $_ } | export-csv "SoftwareInventar.csv" -notypeinformation
+
+Get-Content "Computers.txt" 
+	| foreach { get-wmiobject win32_product -computername $_ } 
+	| where { $_.Vendor -notlike "*Microsoft"  
+	| export-csv "SoftwareInventar.csv" -notypeinformation
+	
+Get-Childitem HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall | Where-Object -FilterScript { $_.GetValue("DisplayName") -like "a*" } | ForEach-Object -Process { $_.GetValue("DisplayName") ,$_.GetValue("Comments"), $_.GetValue("UninstallString") } 	
+
+see WindowsIT Pro 3.2007, S. 40f
+
+
+                            
