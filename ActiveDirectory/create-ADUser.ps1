@@ -7,12 +7,13 @@
 #
 # Change History:
 #	28.08.2011/ap V1
-#	29.08.2011/ap V2
+#	29.08.2011/ap V2 
 #	01.09.2011/ap V3
 #	16.09.2011/ap V4
+#	24.07.2014/ap V4.1 - csv handling ASCII (дья...)
 #
 # preconditions:
-#	template user and his/her group exists, example: Fs2011Template in Fs2011
+# 
 #	csv-file format example:
 #		Lastname,Firstname
 #		Friend,Fred
@@ -25,14 +26,14 @@
 #		add user to group
 #	  end-while
 #
+#	preconditions:
+#		home directories and shares have been created
+#		privileges have been set
+#
 #	postconditions:
 #		users have been created
 #		events have been logged
 #
-# TODO: create home directories and set privileges
-#
-#
-# params
 # ---------------------------------------------------
 #
 # error handling
@@ -42,6 +43,33 @@
 #	continue;
 #}
 # ---------------------------------------------------
+<#
+.SYNOPSIS
+Create a number of active directory users.
+
+.DESCRIPTION
+Create a number of active directory users using a csv-file.
+
+.PARAMETER FirstParameter
+Form
+start-yes-no
+
+.INPUTS
+No objects can be piped to this script. Parameters are entered via dialog.
+
+.OUTPUTS
+Logs results of execution.
+
+.EXAMPLE
+run: .\create-ADUser.ps1
+
+.LINK
+No links to further documentation
+
+.NOTES
+No comments at the moment.
+#>
+
 $date = get-date
 $path = "E:\Admin\ActiveDirectory\"
 $forms = $path + "forms\"
@@ -64,56 +92,53 @@ if($answer -eq "y") {
 
 	 "Start creating users" | out-file $log -Append
 
-# get template user and group
 # ---------------------------------------------------
-	$group = Get-ADGroup $form
-#Todo: handle errors
-	$sTemplateUser = $form + "Template"
-	$templateUser = Get-ADUser -Identity $sTemplateUser
+$group = Get-ADGroup $form
+
+# TODO handle errors
 
 # process csv-file
 # ---------------------------------------------------	
 
-#Set User Profile Path
 $profilepath = "\\U9dc1\" + $form + "Profiles$\"
 $homedirectory = "\\U9dc1\" + $form + "$\"
-#
-	$file = $forms + $form + ".txt"
+
+$file = $forms + $form + ".txt"
 	
-	import-CSV -Delimiter "," $file | Foreach-Object {
+Get-Content $file -Encoding:String | ConvertFrom-Csv | Foreach-Object {
 
-		Trap [Exception] {
-			"Trapped $($_.Exception.Message)" + ": " + $SAMAccountName | out-file $log  -Append; `
-			continue;
-		}
-		$lastname = $_.Lastname.trim()
-		$firstname = $_.Firstname.trim()
+	Trap [Exception] {
+		"Trapped $($_.Exception.Message)" + ": " + $SAMAccountName | out-file $log  -Append; `
+		continue;
+	}
+	$lastname = $_.Lastname.trim()
+	$firstname = $_.Firstname.trim()
 
-		$SAMAccountName = $lastname + $firstname
-		if($SAMAccountName.length > 20) {
-			$SAMAccountName = $SAMAccountName.Substring(0,20)
-			"Mind SAMAccountName for $lastname$firstname is $SAMAccountName" | out-file $log -Append
-		}
-		$user = New-ADUser -SAMAccountName $SAMAccountName -Instance $templateUser `
-					-Name $SAMAccountName `
-					-GivenName $lastname -Surname $firstname `
-					-DisplayName ($lastname + " " + $firstname) `
-					-UserPrincipalName ($SAMAccountName + "@bsz.edu") `
-					-ProfilePath ($profilepath + $SAMAccountName) `
-					-HomeDirectory ($homedirectory + $SAMAccountName) `
-					-HomeDrive "H:" `
-					-Path ("ou=" + $form + ",ou=BszUsers,dc=bsz,dc=edu") `
-					-AccountPassword $password `
-					-ChangePasswordAtLogon $true `
-					-PassThru 
-					
-		add-ADPrincipalGroupMembership $user -memberOf $group
+	$SAMAccountName = $lastname + $firstname
+	if($SAMAccountName.length > 20) {
+		$SAMAccountName = $SAMAccountName.Substring(0,20)
+		"Mind SAMAccountName for $lastname$firstname is $SAMAccountName" | out-file $log -Append
+	}
+	$user = New-ADUser -SAMAccountName $SAMAccountName `
+				-Name $SAMAccountName `
+				-GivenName $lastname -Surname $firstname `
+				-DisplayName ($lastname + " " + $firstname) `
+				-UserPrincipalName ($SAMAccountName + "@bsz.edu") `
+				-ProfilePath ($profilepath + $SAMAccountName) `
+				-HomeDirectory ($homedirectory + $SAMAccountName) `
+				-HomeDrive "H:" `
+				-Path ("ou=" + $form + ",ou=BszUsers,dc=bsz,dc=edu") `
+				-AccountPassword $password `
+				-ChangePasswordAtLogon $true `
+				-Enabled $True `
+				-PassThru 
+				
+	add-ADPrincipalGroupMembership $user -memberOf $group
 		
-		$user.SamAccountName + " has been created" | Out-File $log -Append
-		
-		new-item -type directory -path $formfolder\$SAMAccountName 
-		& Icacls $formfolder\$SAMAccountName /Grant:r $SAMAccountName$permission
-		& Icacls $formfolder\$SAMAccountName /setowner $SAMAccountName /T /C
-
-	}	
+	$user.SamAccountName + " has been created" | Out-File $log -Append
+	
+	new-item -type directory -path $formfolder\$SAMAccountName 
+	& Icacls $formfolder\$SAMAccountName /Grant:r $SAMAccountName$permission
+	& Icacls $formfolder\$SAMAccountName /setowner $SAMAccountName /T /C
+  }	
 }

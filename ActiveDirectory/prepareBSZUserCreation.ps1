@@ -35,24 +35,10 @@ $forms | foreach-Object {
 	new-ADOrganizationalUnit $form -Path "ou=BszUsers,dc=bsz,dc=edu"
 	New-ADGroup -Name $form -GroupScope Universal -GroupCategory Security
 
-	Move-ADObject -Identity $form -TargetPath 'ou=BszUsers,ou=$form,dc=bsz,dc=edu'
+#	Move-ADObject -Identity $form -TargetPath 'ou=BszUsers,ou=$form,dc=bsz,dc=edu'
 
 }
 		
-# create OUs
-#new-ADOrganizationalUnit Fi2014 -Path "ou=BszUsers,dc=bsz,dc=edu"
-#new-ADOrganizationalUnit Ik2014 -Path "ou=BszUsers,dc=bsz,dc=edu"
-#new-ADOrganizationalUnit A2014 -Path "ou=BszUsers,dc=bsz,dc=edu"
-#new-ADOrganizationalUnit K2014a -Path "ou=BszUsers,dc=bsz,dc=edu"
-#new-ADOrganizationalUnit K2014b -Path "ou=BszUsers,dc=bsz,dc=edu"
-
-# create Groups
-#New-ADGroup -Name Fi2014 -GroupScope Universal -GroupCategory Security
-#New-ADGroup -Name Ik2014 -GroupScope Universal -GroupCategory Security
-#New-ADGroup -Name A2014 -GroupScope Universal -GroupCategory Security
-#New-ADGroup -Name K2014a -GroupScope Universal -GroupCategory Security
-#New-ADGroup -Name K2014b -GroupScope Universal -GroupCategory Security
-
 # TODO move groups to corresponding OUs
 ##Move-ADObject -Identity Fi2014 -TargetPath 'ou=BszUsers,ou=Fi2014,dc=bsz,dc=edu'
 #Move-ADObject -Identity Ik2014 -TargetPath 'ou=BszUsers,ou=Ik2014,dc=bsz,dc=edu'

@@ -12,11 +12,11 @@
 #	16.09.2011/ap V4
 #
 # preconditions:
-#	template user and his/her group exists, example: Fs2011Template in Fs2011
+#	template user and his/her group exists
 #	csv-file format example:
 #		Lastname,Firstname
-#		Friend,Fred
-#		Folder,Fanny
+#		U10,Tc02
+#		U10,Tc03
 #
 #	procedure:
 #	  import csv-file
@@ -31,8 +31,9 @@
 #
 # TODO: create home directories and set privileges
 #
+# Usage: .\create-FpaADUser.ps1
 #
-# params
+# params: form (fpA)
 # ---------------------------------------------------
 #
 # error handling
@@ -63,55 +64,48 @@ if($answer -eq "y") {
 
 	 "Start creating users" | out-file $log -Append
 
-# get template user and group
 # ---------------------------------------------------
-	$group = Get-ADGroup $form
+$group = Get-ADGroup $form
+
 #Todo: handle errors
-	$sTemplateUser = $form + "Template"
-	$templateUser = Get-ADUser -Identity $sTemplateUser
 
 # process csv-file
 # ---------------------------------------------------	
 
-#Set User Profile Path
-#$profilepath = "\\U9dc1\" + $form + "Profiles$\"
-$profilepath = "\\bsz.edu\netlogon\Profiles\fpA"
+$profilepath = "\\U9Dc1\Benutzer$\fpAProfiles$\profile"
 $homedirectory = "\\U9dc1\" + $form + "$"
-#
-	$file = $forms + $form + ".txt"
+
+$file = $forms + $form + ".txt"
+
+import-CSV -Delimiter "," $file | Foreach-Object {
+
+	Trap [Exception] {
+		"Trapped $($_.Exception.Message)" + ": " + $SAMAccountName | out-file $log  -Append; `
+		continue;
+	}
+	$lastname = $_.Lastname
+	$firstname = $_.Firstname
+
+	$SAMAccountName = $lastname + $firstname
+
+	$user = New-ADUser -SAMAccountName $SAMAccountName `
+				-Name $SAMAccountName `
+				-GivenName $lastname -Surname $firstname `
+				-DisplayName ($lastname + $firstname) `
+				-UserPrincipalName ($SAMAccountName + "@bsz.edu") `
+				-ProfilePath ($profilepath) `
+				-Path ("ou=BszFpA,ou=BszUsers,dc=bsz,dc=edu") `
+				-AccountPassword $password `
+				-ChangePasswordAtLogon $True `
+				-Enabled $True `
+				-PassThru 
+				
+	add-ADPrincipalGroupMembership $user -memberOf $group
 	
-	import-CSV -Delimiter "," $file | Foreach-Object {
-
-		Trap [Exception] {
-			"Trapped $($_.Exception.Message)" + ": " + $SAMAccountName | out-file $log  -Append; `
-			continue;
-		}
-		$lastname = $_.Lastname.trim()
-		$firstname = $_.Firstname.trim()
-
-		$SAMAccountName = $lastname + $firstname
-		if($SAMAccountName.length > 20) {
-			$SAMAccountName = $SAMAccountName.Substring(0,20)
-			"Mind SAMAccountName for $lastname$firstname is $SAMAccountName" | out-file $log -Append
-		}
-		$user = New-ADUser -SAMAccountName $SAMAccountName -Instance $templateUser `
-					-Name $SAMAccountName `
-					-GivenName $lastname -Surname $firstname `
-					-DisplayName ($lastname + " " + $firstname) `
-					-UserPrincipalName ($SAMAccountName + "@bsz.edu") `
-					-ProfilePath ($profilepath) `
-					-Path ("ou=" + $form + ",ou=BszUsers,dc=bsz,dc=edu") `
-					-AccountPassword $password `
-					-ChangePasswordAtLogon $true `
-					-PassThru 
-					
-		add-ADPrincipalGroupMembership $user -memberOf $group
-		
-		$user.SamAccountName + " has been created" | Out-File $log -Append
-		
-		new-item -type directory -path $formfolder\$SAMAccountName 
+	$user.SamAccountName + " has been created" | Out-File $log -Append
+	
+	new-item -type directory -path $formfolder\$SAMAccountName 
 		& Icacls $formfolder\$SAMAccountName /Grant:r $SAMAccountName$permission
 		& Icacls $formfolder\$SAMAccountName /setowner $SAMAccountName /T /C
-
 	}	
 }
