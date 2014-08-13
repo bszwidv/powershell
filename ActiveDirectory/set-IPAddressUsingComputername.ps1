@@ -28,7 +28,8 @@ No links to further documentation
 
 .NOTES
 No comments at the moment.
-#>
+#> 
+[CmdletBinding() ]
 
 $ConfirmPreference="none"
 $computer = get-content env:computername
@@ -63,6 +64,7 @@ if($computer -like "U??WKS??") { # U10, U11, U12
 if($ok) {
     Remove-NetIPAddress -ifalias Ethernet -ipaddress *.*.*.* -PrefixLength 16 -Confirm:$false
     Remove-NetRoute -NextHop "172.16.111.1" -Confirm:$false
+
     New-NetIPAddress -ifAlias Ethernet -IPAddress 172.16.$room.$host -PrefixLength 16 -DefaultGateway 172.16.111.1
     Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses ("172.16.1.1", "172.16.1.2")
 }
