@@ -3,28 +3,28 @@
 # date: 7.8.2014
 <#
 .SYNOPSIS
-Set the IP address to 172.16.5.<random-nn>
+`tSet the IP address to 172.16.5.<random-nn>
 
 .DESCRIPTION
-Set the IP address to 172.16.5.<random-nn> in order to have internet access required by activation.
+`tSet the IP address to 172.16.5.<random-nn> in order to have internet access required by activation.
 
 .PARAMETER 
-no
+`tno
 
 .INPUTS
-No objects can be piped to this script. Parameters are entered via dialog.
+`tNo objects can be piped to this script. Parameters are entered via dialog.
 
 .OUTPUTS
-no
+`tno
 
 .EXAMPLE
-run: .\set-IPAddressTo5Range.ps1
+`trun: .\set-IPAddressTo5Range.ps1
 
 .LINK
-No links to further documentation
+`tNo links to further documentation
 
 .NOTES
-No comments at the moment.
+`tNo comments at the moment.
 #>
 
 
