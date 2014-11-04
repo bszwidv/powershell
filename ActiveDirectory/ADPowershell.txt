@@ -1,25 +1,49 @@
--- Active Directory
+-- Active Directory on U9Lab
 new-ADOrganizationalUnit BszLehrer -Path "ou=BszUsers,dc=bszlab,dc=edu"
 
 
-New-ADUser –Name "John Smith" –SamAccountName JohnS –DisplayName "John Smith" –Title "Account Manager" –Enabled $true –ChangePasswordAtLogon $true -AccountPassword (ConvertTo-SecureString "p@ssw0rd" -AsPlainText -force) -PassThru
+Powershell uses verb-noun name-pair format to name cmdlets. For example:
+New-ADGroup
+Get-ADDomain
 
-New-ADGroup -Name "Account Managers" -SamAccountName AcctMgrs -GroupScope Global -GroupCategory Security -Description "Account Managers Group" –PassThru
+To get a list of AD cmdlets type
+PS AD:\> get-help *-AD*
+PS AD:\> get-help New-AD*        ## would list all the cmdlets that create new AD objects
 
-New-ADOrganizationalUnit -Name AccountsDepartment -ProtectedFromAccidentalDeletion $true  -PassThru
+To get more info on a specific cmdlet or read examples, type
+PS AD:\> get-help set-aduser -detailed
+PS AD:\> get-help get-aduser -examples
 
-Get-ADUser -Filter { name –like "john*" } ## Gets all the users whose name starts with John
+Tips: You can use the tab completion feature of Powershell to complete cmdlet names or parameter names. For example after entering the Verb- part of a cmdlet name you can hit <TAB> key to cycle through all of the nouns available for that verb.
 
-Add-ADGroupMember -Identity AcctMgrs -Members JohnS
+Common tasks:
 
-Get-ADGroupMember -Identity AcctMgrs
+Here are some examples of commonly performed tasks using AD cmdlets:
 
-Get-ADPrincipalGroupMembership -Identity JohnS  ## Gets all the groups in which the specified account is a direct member.
+PS C:\> New-ADUser –Name "John Smith" –SamAccountName JohnS –DisplayName "John Smith" –Title "Account Manager" –Enabled $true –ChangePasswordAtLogon $true -AccountPassword (ConvertTo-SecureString "p@ssw0rd" -AsPlainText -force) -PassThru
 
-Get-ADAccountAuthorizationGroup -Identity JohnS  ## Gets the token groups of an account
+PS C:\> New-ADGroup -Name "Account Managers" -SamAccountName AcctMgrs -GroupScope Global -GroupCategory Security -Description "Account Managers Group" –PassThru
 
-Unlock-ADAccount -Identity JohnS
+PS C:\> New-ADOrganizationalUnit -Name AccountsDepartment -ProtectedFromAccidentalDeletion $true  -PassThru
 
-Get-ADDomain -Current LoggedOnUser
+PS C:\> Get-ADUser -Filter { name –like "john*" } ## Gets all the users whose name starts with John
 
-Get-ADDomainController -Filter { name -like "*" }  ## Gets all the DCs in the current domain
+PS C:\> Add-ADGroupMember -Identity AcctMgrs -Members JohnS
+
+PS C:\> Get-ADGroupMember -Identity AcctMgrs
+
+PS C:\> Get-ADPrincipalGroupMembership -Identity JohnS  ## Gets all the groups in which the specified account is a direct member.
+
+PS C:\> Get-ADAccountAuthorizationGroup -Identity JohnS  ## Gets the token groups of an account
+
+PS C:\> Unlock-ADAccount -Identity JohnS
+
+PS C:\> Get-ADForest -Current LocalComputer
+
+PS C:\> Get-ADDomain -Current LoggedOnUser
+
+PS C:\> Get-ADDomainController -Filter { name -like "*" }  ## Gets all the DCs in the current domain
+
+What next?
+
+In the next post we will give an overview of Active Directory Powershell and talk about various cmdlets we provide in this release.

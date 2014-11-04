@@ -3,31 +3,31 @@
 # date: 7.8.2014
 <#
 .SYNOPSIS
-`tSet the IP address which can be derived using the computername.
+Set the IP address which can be derived using the computername.
 
 .DESCRIPTION
-`tSet the IP address which can be derived using the computername. Example:
-`t`t172.16.room.host
-`t`tU4WKS10 -> 172.16.4.10
-`t`t206WKS01 -> 172.16.206.1
+Set the IP address which can be derived using the computername. Example:
+    172.16.room.host
+    U4WKS10 -> 172.16.4.10
+    206WKS01 -> 172.16.206.1
 
 .PARAMETER 
-`tno
+no
 
 .INPUTS
-`tNo objects can be piped to this script. Parameters are entered via dialog.
+No objects can be piped to this script. Parameters are entered via dialog.
 
 .OUTPUTS
-`tno
+no
 
 .EXAMPLE
-`trun: .\set-IPAddressUsingComputername.ps1
+run: .\set-IPAddressUsingComputername.ps1
 
 .LINK
-`tNo links to further documentation
+No links to further documentation
 
 .NOTES
-`tNo comments at the moment.
+No comments at the moment.
 #> 
 [CmdletBinding() ]
 
