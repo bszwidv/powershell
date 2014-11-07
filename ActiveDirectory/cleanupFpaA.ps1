@@ -4,7 +4,7 @@ $now = get-Date
 $raum = read-Host "Raum"
 $datei = $raum + ".txt"
 $Computers = Get-Content "E:\Temp\Computerräume\$datei"
-#	
+#
 $answer = read-Host -Prompt "Start cleanup (y/n)? "
 
 if($answer -eq "y") 
