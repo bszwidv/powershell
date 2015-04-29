@@ -27,7 +27,7 @@ No links to further documentation
 .NOTES
 No comments at the moment.
 #>
-$forms = @("Fi2014", "Ik2014", "A2014", "K2014a", "K2014b")
+$forms = @("Fi2015", "Ik2015", "A2015", "K2015a", "K2015b")
 
 $forms | foreach-Object {
 	$form = $_
