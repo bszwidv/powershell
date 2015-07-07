@@ -34,14 +34,11 @@ $forms | foreach-Object {
 	
 	new-ADOrganizationalUnit $form -Path "ou=BszUsers,dc=bsz,dc=edu"
 	New-ADGroup -Name $form -GroupScope Universal -GroupCategory Security
-
-#	Move-ADObject -Identity $form -TargetPath 'ou=BszUsers,ou=$form,dc=bsz,dc=edu'
-
 }
 		
-# TODO move groups to corresponding OUs
-##Move-ADObject -Identity Fi2014 -TargetPath 'ou=BszUsers,ou=Fi2014,dc=bsz,dc=edu'
-#Move-ADObject -Identity Ik2014 -TargetPath 'ou=BszUsers,ou=Ik2014,dc=bsz,dc=edu'
-#Move-ADObject -Identity A2014 -TargetPath 'ou=BszUsers,ou=A2014,dc=bsz,dc=edu'
-#Move-ADObject -Identity K2014a -TargetPath 'ou=BszUsers,ou=K2014a,dc=bsz,dc=edu'
-#Move-ADObject -Identity K2014b -TargetPath 'ou=BszUsers,ou=K2014b,dc=bsz,dc=edu'
+# TODO move groups to corresponding OUs - modify this code
+#Move-ADObject -Identity Fi2015 -TargetPath 'ou=BszUsers,ou=Fi2015,dc=bsz,dc=edu'
+#Move-ADObject -Identity Ik2015 -TargetPath 'ou=BszUsers,ou=Ik2015,dc=bsz,dc=edu'
+#Move-ADObject -Identity A2015 -TargetPath 'ou=BszUsers,ou=A2015,dc=bsz,dc=edu'
+#Move-ADObject -Identity K2015a -TargetPath 'ou=BszUsers,ou=K2015a,dc=bsz,dc=edu'
+#Move-ADObject -Identity K2015b -TargetPath 'ou=BszUsers,ou=K2015b,dc=bsz,dc=edu'
