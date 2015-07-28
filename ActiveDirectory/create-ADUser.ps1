@@ -137,7 +137,7 @@ Get-Content $file -Encoding:String | ConvertFrom-Csv | Foreach-Object {
 		
 	$user.SamAccountName + " has been created" | Out-File $log -Append
 	
-	new-item -type directory -path $formfolder\$SAMAccountName 
+	new-item -type directory -path "$formfolder\$SAMAccountName\Eigene Dateien"
 	& Icacls $formfolder\$SAMAccountName /Grant:r $SAMAccountName$permission
 	& Icacls $formfolder\$SAMAccountName /setowner $SAMAccountName /T /C
   }	
