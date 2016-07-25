@@ -102,6 +102,7 @@ $group = Get-ADGroup $form
 
 $profilepath = "\\U9dc1\" + $form + "Profiles\"
 $homedirectory = "\\U9dc1\" + $form + "\"
+# TODO refactor path
 $sharedHomedrive = "\\U9dc1\" + $form + "$\"
 
 $file = $forms + $form + ".txt"
