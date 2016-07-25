@@ -1,14 +1,14 @@
-$forms = @("Fi2015", "Ik2015", "A2015", "B2015a", "B2015b")
+$forms = @("Fi2016", "Ik2016", "A2016", "B2016a", "B2016b")
 
 $forms | foreach-Object {
 	$form = $_
-	$formfolder = "E:\Benutzer\" + $form + "$"
+	$formfolder = "E:\Benutzer\" + $form
 	
 	$answer = (Get-WmiObject Win32_Share -List).create($formfolder, $form + "$", 0)
 #	TODO log answer
 #	TODO configure share permissions
 	
-	$formfolder = "E:\Benutzer\" + $form + "Profiles$"
+	$formfolder = "E:\Benutzer\" + $form + "Profiles"
 
 	$answer = (Get-WmiObject Win32_Share -List).create($formfolder, $form + "$", 0)
 #	TODO log answer

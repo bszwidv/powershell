@@ -30,17 +30,17 @@ No comments at the moment.
 
 $permission = ':(OI)(CI)M'
 
-$forms = @("Fi2015", "Ik2015", "A2015", "B2015a", "B2015b")
+$forms = @( "Fi2016", "Ik2016", "A2016", "B2016a", "B2016b" )
 
 $forms | foreach-Object {
 	$form = $_
-	$formfolder = "E:\Benutzer\" + $form + "$"
+	$formfolder = "E:\Benutzer\" + $form
 
 	new-item -type directory -path $formfolder 
 		& Icacls $formfolder /Grant:r $form$permission
 		& Icacls $formfolder /setowner $form /T /C
 
-	$formfolder = "E:\Benutzer\" + $form + "Profiles$"
+	$formfolder = "E:\Benutzer\" + $form + "Profiles"
 
 	new-item -type directory -path $formfolder
 		& Icacls $formfolder /Grant:r $form$permission

@@ -81,7 +81,7 @@ $form = read-Host -Prompt "Enter Form: "
 
 $password = Read-Host -AsSecureString "AccountPassword"
 
-$formfolder = "E:\Benutzer\" + $form + "$"
+$formfolder = "E:\Benutzer\" + $form
 
 $answer = read-Host -Prompt "Start createADUser (y/n)? "
 if($answer -eq "y") {
@@ -100,8 +100,9 @@ $group = Get-ADGroup $form
 # process csv-file
 # ---------------------------------------------------	
 
-$profilepath = "\\U9dc1\" + $form + "Profiles$\"
-$homedirectory = "\\U9dc1\" + $form + "$\"
+$profilepath = "\\U9dc1\" + $form + "Profiles\"
+$homedirectory = "\\U9dc1\" + $form + "\"
+$sharedHomedrive = "\\U9dc1\" + $form + "$\"
 
 $file = $forms + $form + ".txt"
 	
@@ -124,8 +125,7 @@ Get-Content $file -Encoding:String | ConvertFrom-Csv | Foreach-Object {
 				-GivenName $lastname -Surname $firstname `
 				-DisplayName ($lastname + " " + $firstname) `
 				-UserPrincipalName ($SAMAccountName + "@bsz.edu") `
-				-ProfilePath ($profilepath + $SAMAccountName) `
-				-HomeDirectory ($homedirectory + $SAMAccountName) `
+				-HomeDirectory ($sharedHomedrive + $SAMAccountName + "\Eigene Dateien") `
 				-HomeDrive "H:" `
 				-Path ("ou=" + $form + ",ou=BszUsers,dc=bsz,dc=edu") `
 				-AccountPassword $password `
@@ -134,8 +134,8 @@ Get-Content $file -Encoding:String | ConvertFrom-Csv | Foreach-Object {
 				-PassThru 
 				
 	add-ADPrincipalGroupMembership $user -memberOf $group
-		
-	$user.SamAccountName + " has been created" | Out-File $log -Append
+
+	$user.SamAccountName | out-file $log  -Append	
 	
 	new-item -type directory -path "$formfolder\$SAMAccountName\Eigene Dateien"
 	& Icacls $formfolder\$SAMAccountName /Grant:r $SAMAccountName$permission

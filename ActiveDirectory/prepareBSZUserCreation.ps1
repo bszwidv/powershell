@@ -27,7 +27,7 @@ No links to further documentation
 .NOTES
 No comments at the moment.
 #>
-$forms = @("Fi2015", "Ik2015", "A2015", "B2015a", "B2015b")
+$forms = @("Fi2016", "Ik2016", "A2016", "B2016a", "B2016b")
 
 $forms | foreach-Object {
 	$form = $_
@@ -36,9 +36,5 @@ $forms | foreach-Object {
 	New-ADGroup -Name $form -GroupScope Universal -GroupCategory Security
 }
 		
-# TODO move groups to corresponding OUs - modify this code
-#Move-ADObject -Identity Fi2015 -TargetPath 'ou=BszUsers,ou=Fi2015,dc=bsz,dc=edu'
-#Move-ADObject -Identity Ik2015 -TargetPath 'ou=BszUsers,ou=Ik2015,dc=bsz,dc=edu'
-#Move-ADObject -Identity A2015 -TargetPath 'ou=BszUsers,ou=A2015,dc=bsz,dc=edu'
-#Move-ADObject -Identity K2015a -TargetPath 'ou=BszUsers,ou=K2015a,dc=bsz,dc=edu'
-#Move-ADObject -Identity K2015b -TargetPath 'ou=BszUsers,ou=K2015b,dc=bsz,dc=edu'
+# TODO move groups to BszGroups
+#Move-ADObject -Identity Fi2016 -TargetPath 'ou=BszGroups,dc=bsz,dc=edu'
